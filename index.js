@@ -20,9 +20,20 @@ intro.on('update', () => {
 });
 screen.append(intro);
 
+// quit screen
+let prompts = require('./screens/prompts');
+screen.append(prompts.question);
+
 // handle global exit commands
 screen.key(['escape', 'q', 'C-c'], (ch, key) => {
-    return process.exit(0);
+    prompts.question.ask('Are you sure you wish to quit?', (err, value) => {
+        if (!!value) {
+            return process.exit(0);
+        }
+
+        prompts.question.hide();
+        screen.render();
+    });
 });
 
 // initial render
